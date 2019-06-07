@@ -1,0 +1,89 @@
+'use strict';
+
+const fs      = require('fs');
+const path    = require('path');
+const join    = path.join;
+const defer   = require('config/defer').deferConfig;
+const appName = require('../package').name;
+
+module.exports = {
+    appName,
+    ssl: {
+        key: defer(cfg => {
+            try {
+                return fs.readFileSync(process.env.SSL_KEY);
+            } catch (err) {
+                if (cfg.protocol == 'https' || cfg.protocol == 'http2' || cfg.protocol == 'http/2') {
+                    console.error('SSL key not found.');
+                    process.exit(1);
+                }
+            }
+        }),
+        cert: defer(cfg => {
+            try {
+                return fs.readFileSync(process.env.SSL_CERT);
+            } catch (err) {
+                if (cfg.protocol == 'https' || cfg.protocol == 'http2' || cfg.protocol == 'http/2') {
+                    console.error('SSL cert not found.');
+                    process.exit(1);
+                }
+            }
+        })
+    },
+    protocol: process.env.PROTOCOL || 'http',
+    host: process.env.HOST || 'localhost',
+    port: isNaN(Number(process.env.PORT)) ? 3000 : Number(process.env.PORT),
+    origins: process.env.ORIGINS ? process.env.ORIGINS.split(/\s{0,},\s{0,}/) : [],
+    staticRoot: join(__dirname, '../', './static'),
+    projectRoot: join(__dirname, '../'),
+    logsRoot: process.env.LOGS_PATH || join(__dirname, '../', './logs'),
+    uploadsRoot: process.env.UPLOADS_PATH || join(__dirname, '../', './data'),
+    defaultLocale: 'ru',
+    redis: {
+        port: isNaN(Number(process.env.REDIS_PORT)) ? 6379 : Number(process.env.REDIS_PORT),
+        host: process.env.REDIS_HOST || 'localhost',
+        pass: process.env.REDIS_PASS || null
+    },
+    mongoose: {
+        uri: defer(cfg => {
+            let uri = `${process.env.MONGOOSE_URI}/${cfg.mongoose.dbName}`;
+            if (process.env.MONGOOSE_REPL_SET_NAME) {
+                uri += ('?replicaSet=' + process.env.MONGOOSE_REPL_SET_NAME);
+            }
+            return uri;
+        }),
+        dbName: process.env.MONGOOSE_DB_NAME,
+        options: {
+            useNewUrlParser: true,
+            user: process.env.MONGOOSE_USER,
+            pass: process.env.MONGOOSE_PASS,
+            autoIndex: false,
+            keepAlive: 1,
+            poolSize: 5,
+            connectTimeoutMS: 0,
+            socketTimeoutMS: 0,
+            promiseLibrary: global.Promise,
+            bufferMaxEntries: 0
+        }
+    },
+
+    nodemailer: {
+        service: process.env.MAILER_SERVICE || 'gmail',
+        host: process.env.MAILER_HOST || 'smtp-relay.gmail.com',
+        port: isNaN(Number(process.env.MAILER_PORT)) ? 25 : Number(process.env.MAILER_PORT),
+        secure: defer(cfg => {
+            // true for 465, false for other ports on gmail
+            return (Number(cfg.nodemailer.port) === 465 || Number(process.env.MAILER_PORT) === 465)
+        }),
+        auth: {
+            user: process.env.MAILER_USER,
+            pass: process.env.MAILER_PASS
+        }
+    },
+    crypto: {
+        hash: {
+            length: 128,
+            iterations: 12000
+        }
+    }
+};
