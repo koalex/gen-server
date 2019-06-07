@@ -1,11 +1,9 @@
 'use strict';
 
 const path          = require('path');
-const join          = path.join;
 const extname       = path.extname;
 const config        = require('config');
 const pug           = require('pug');
-const templatesRoot = join(config.projectRoot, './modules');
 const CLS           = require('cls-hooked');
 
 module.exports = async (ctx, next) => {
@@ -54,7 +52,7 @@ module.exports = async (ctx, next) => {
 
     ctx.renderToString = (templatePath, locals = {}) => {
         let localsFull = new Locals(locals);
-        let path2file  = join(templatesRoot, templatePath);
+        let path2file  = templatePath;
 
         if (extname(path2file) !== '.pug') path2file += '.pug';
 
