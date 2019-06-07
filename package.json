@@ -67,7 +67,7 @@
             "url": "https://github.com/koalex"
         }
     ],
-    "license": "SEE LICENSE IN LICENSE.md",
+    "license": "SEE LICENSE IN LICENSE file",
     "homepage": "https://github.com/koalex/gen-server#readme",
     "engines": {
         "node": ">=10.10.0",
