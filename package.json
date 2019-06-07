@@ -38,6 +38,7 @@
         "ignore": [
             "test/*",
             "static/*",
+            ".idea",
             "node_modules",
             "logs/*",
             "temp/*",
