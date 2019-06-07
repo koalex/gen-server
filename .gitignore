@@ -20,6 +20,7 @@ temp/*
 !temp/.gitkeep
 ncp-debug.log
 static/*
+!static/loveyalikeasister.woff2
 !static/robots.txt
 !static/error.pug
 !static/403.svg
