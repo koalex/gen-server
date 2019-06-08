@@ -1,4 +1,9 @@
 {
+  "outdatedbrowser": {
+    "HEADER": "Your browser is not supported",
+    "DOWNLOAD": "download",
+    "AVAILABLE": "available on"
+  },
   "GO_2_HOME_PAGE": "home page",
   "BAD_VALUE": "bad value",
   "RETRY_IN": "retry in",

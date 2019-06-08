@@ -105,6 +105,7 @@
         "koa-static": "^5.0.0",
         "koa-useragent": "^1.2.1",
         "koa2-cors": "^2.0.6",
+        "lru-cache": "^5.1.1",
         "mongoose": "^5.5.13",
         "mongoose-unique-validator": "^2.0.3",
         "ncp": "^2.0.0",

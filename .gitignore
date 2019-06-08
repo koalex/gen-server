@@ -26,6 +26,10 @@ static/*
 !static/403.svg
 !static/404.svg
 !static/500.svg
+!static/outdatedBrowser.pug
+!static/outdatedbrowsers_edge.png
+!static/outdatedbrowsers_ie.png
+!static/outdatedbrowsers_systems.png
 
 
 # Runtime data #

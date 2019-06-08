@@ -207,6 +207,7 @@ i18n(app);
 /** DEFAULT MIDDLEWARES **/
 let defaultMiddlewares = [
     'rateLimit.js',
+    'outdatedBrowser.js',
     'static.js',
     'compress.js',
 	'logger.js',
@@ -214,7 +215,12 @@ let defaultMiddlewares = [
 	'errors.js'
 ].map(mw => path.join(config.projectRoot, 'middlewares', mw));
 
-app.use(compose(defaultMiddlewares.map(mw => require(mw))));
+app.use(compose(defaultMiddlewares.map(mw => {
+    if (mw.endsWith('outdatedBrowser.js')) {
+        return require(mw)({IE: 10})
+    }
+    return require(mw);
+})));
 
 app.use(async (ctx, next) => {
 	ctx.log = ns.get('logger');
@@ -256,6 +262,9 @@ app.use(async (ctx, next) => {
 });
 
 router.get('/__user-agent__', ctx => ctx.body = ctx.userAgent);
+router.get('/test', ctx => {
+    ctx.render('/Users/Konstantin/Documents/SRC/AngryBookmaker/gen-server/static/test.pug')
+});
 
 app
     .use(router.routes())

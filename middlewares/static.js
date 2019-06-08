@@ -8,7 +8,7 @@ module.exports = async (ctx, next) => {
     let staticPath = config.staticRoot;
     const url      = path.normalize(ctx.request.url);
 
-    if (/^[\\/]{1,2}error\.pug/.test(url)) {
+    if (/^[\\/]{1,2}error\.pug/.test(url) || /^[\\/]{1,2}outdatedBrowser\.pug/.test(url)) {
         return await next();
     }
 
@@ -23,8 +23,4 @@ module.exports = async (ctx, next) => {
         gzip: true,
         hidden: false
     })(ctx, next);
-
-    if (ctx.body && 'text/html' === ctx.type && 'GET' === ctx.method) { // Send to outdated browser check
-        await next();
-    }
 };
