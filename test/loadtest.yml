@@ -1,5 +1,7 @@
 config:
-  target: 'http://localhost:3000'
+  target: "{{ $processEnvironment.PROTOCOL }}://{{ $processEnvironment.HOST }}:{{ $processEnvironment.PORT }}"
+  tls:
+    rejectUnauthorized: false
   phases:
     - duration: 120 # ramp up arrival rate from 10 to 50 over 2 minutes
       arrivalRate: 10 # with 10 new virtual users (arriving every second (on average).
