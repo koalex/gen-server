@@ -5,7 +5,7 @@
     "main": "./bin/server.js",
     "scripts": {
         "start": "cross-env NODE_ENV=production node ./bin/server.js",
-        "dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
+        "dev": "cross-env NODE_ENV=development node ./bin/nodemon.js",
         "trace:prod": "cross-env NODE_ENV=production TRACE=true node ./bin/server.js",
         "trace:dev": "cross-env NODE_ENV=development TRACE=true node ./bin/server.js",
         "test": "cross-env NODE_ENV=test mocha \"./test/*.js\" --recursive --exit",
@@ -25,19 +25,6 @@
             "pre-commit": "npm test",
             "pre-push": "npm test"
         }
-    },
-    "nodemonConfig": {
-        "ignore": [
-            "test/*",
-            "static/*",
-            ".idea",
-            "node_modules",
-            "logs/*",
-            "temp/*",
-            "data/*",
-            "coverage/*",
-            "i18n/data/*.json"
-        ]
     },
     "repository": {
         "type": "git",
