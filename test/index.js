@@ -10,25 +10,13 @@ const assert        = require('assert');
 const fs			= require('fs');
 const path          = require('path');
 const uuid          = require('uuid/v4');
-const genServerPath = path.join(__dirname, '../node_modules/@gen-server');
-const symlinks = {
-    [path.join(__dirname, '../bin')]: path.join(genServerPath, 'bin'), // for tests
-    [path.join(__dirname, '../package.json')]: path.join(genServerPath, 'package.json'), // for tests
-    [path.join(__dirname, '../modules')]: path.join(genServerPath, 'modules'),
-    [path.join(__dirname, '../lib')]: path.join(genServerPath, 'lib'),
-    [path.join(__dirname, '../middlewares')]: path.join(genServerPath, 'middlewares'),
-    [path.join(__dirname, '../utils')]: path.join(genServerPath, 'utils'),
-    [path.join(__dirname, '../static')]: path.join(genServerPath, 'static'),
-    [path.join(__dirname, '../logs')]: path.join(genServerPath, 'logs')
-};
-if (!fs.existsSync(genServerPath)) fs.mkdirSync(genServerPath);
-for(let target in symlinks) {
-    if (!fs.existsSync(symlinks[target])) fs.symlinkSync(target, symlinks[target]);
-}
+const server        = require(__dirname + '/../bin/server.js');
+const request       = require('supertest')(server);
+const io            = require('socket.io-client');
 
-const server    = require('@gen-server/bin/server.js');
-const request   = require('supertest')(server);
-const io        = require('socket.io-client');
+const addToStaticAsync = require(__dirname + '/../utils/copyToStatic');
+const removeFromStatic = require(__dirname + '/../utils/removeFromStatic');
+
 const ioOptions = {
     path: '',
     secure,
@@ -104,10 +92,25 @@ describe('GEN SERVER', () => {
     });
 
     describe('Outdated browser', () => {
+        before(done => {
+            addToStaticAsync(`${__dirname}/../fixtures/__test_outdated_browser__.html`).then(() => {
+                done();
+            }).catch(done);
+        });
+
+        after(done => {
+            try {
+                removeFromStatic('__test_outdated_browser__.html');
+                done();
+            } catch (err) {
+                done(err);
+            }
+        });
+
         it('should render RU "Not Supported Browser" page with Accept-Language header', function (done) {
             this.slow(1000); // render w/o cache
             request
-                .get('/')
+                .get('/__test_outdated_browser__.html')
                 .set('Accept-Language', 'ru-RU,ru;q=0.9,zh;q=0.8,zh-HK;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5')
                 .set('User-Agent', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')
                 .expect('Content-Type', /html/)
@@ -120,7 +123,7 @@ describe('GEN SERVER', () => {
 
         it('should render RU "Not Supported Browser" page with ?locale=ru param', done => {
             request
-                .get('/?locale=ru')
+                .get('/__test_outdated_browser__.html?locale=ru')
                 .expect('Content-Type', /html/)
                 .set('User-Agent', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')
                 .expect(200)
@@ -133,7 +136,7 @@ describe('GEN SERVER', () => {
         it('should render EN "Not Supported Browser" page with Accept-Language header', function (done) {
             this.slow(1000); // render w/o cache
             request
-                .get('/')
+                .get('/__test_outdated_browser__.html')
                 .set('Accept-Language', 'en-US,en;q=0.9,zh;q=0.8,zh-HK;q=0.7,zh-TW;q=0.6,zh-CN;q=0.5')
                 .set('User-Agent', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')
                 .expect('Content-Type', /html/)
@@ -146,7 +149,7 @@ describe('GEN SERVER', () => {
 
         it('should render EN "Not Supported Browser" page with ?locale=en param', done => {
             request
-                .get('/?locale=en')
+                .get('/__test_outdated_browser__.html?locale=en')
                 .expect('Content-Type', /html/)
                 .set('User-Agent', 'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)')
                 .expect(200)
@@ -159,7 +162,6 @@ describe('GEN SERVER', () => {
 
     describe('UTILS #copy files to static dir', () => {
         it('File should be copied to static directory.', function (done) {
-            const addToStaticAsync = require('@gen-server/utils/copyToStatic');
             let filename = uuid();
             let src  = path.join(__dirname, '../temp', filename);
             let dest = path.join(__dirname, '../static', filename);
@@ -180,7 +182,6 @@ describe('GEN SERVER', () => {
         });
 
         it('Array of files should be copied to static directory.', function (done) {
-            const addToStaticAsync = require('@gen-server/utils/copyToStatic');
             let filename1 = uuid();
             let filename2 = uuid();
             let src1  = path.join(__dirname, '../temp', filename1);
