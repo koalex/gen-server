@@ -18,7 +18,6 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const os          	= require('os');
-const fs			= require('fs');
 const http 			= require('http');
 const https			= require('https');
 const http2 		= require('http2');
@@ -43,25 +42,6 @@ const compose       = require('koa-compose');
 const glob          = require('glob');
 const notifier    	= require('node-notifier');
 const i18n          = require('../i18n/index');
-
-const genServerPath = path.join(__dirname, '../node_modules/@gen-server');
-const symlinks = {
-    [path.join(__dirname, '../bin')]: path.join(genServerPath, 'bin'), // for tests
-    [path.join(__dirname, '../package.json')]: path.join(genServerPath, 'package.json'), // for tests
-    [path.join(__dirname, '../modules')]: path.join(genServerPath, 'modules'),
-    [path.join(__dirname, '../lib')]: path.join(genServerPath, 'lib'),
-    [path.join(__dirname, '../middlewares')]: path.join(genServerPath, 'middlewares'),
-    [path.join(__dirname, '../utils')]: path.join(genServerPath, 'utils'),
-    [path.join(__dirname, '../static')]: path.join(genServerPath, 'static'),
-    [path.join(__dirname, '../logs')]: path.join(genServerPath, 'logs')
-};
-if (!fs.existsSync(genServerPath)) fs.mkdirSync(genServerPath);
-for(let target in symlinks) {
-	if (!fs.existsSync(symlinks[target])) {
-        debug('creating symlink ' + symlinks[target] + ' --> ' + target);
-	    fs.symlinkSync(target, symlinks[target]);
-    }
-}
 
 const unhandledRejections = new Map();
 process
@@ -246,13 +226,10 @@ switch (config.protocol) {
 const socket = require('../lib/socket.js');
 socket(server);
 
-/** MODULES **/
-let modules = glob.sync(`${config.projectRoot}/modules/*/index.js`);
-
-modules.forEach(m => {
-    let moduleEntrypoint = require(m);
-    if ('function' === typeof moduleEntrypoint) moduleEntrypoint(app);
-});
+/** MODULES MUST BE HERE**/
+/*
+* require('module)(app)
+* */
 
 app.use(async (ctx, next) => {
     await next();
@@ -262,9 +239,6 @@ app.use(async (ctx, next) => {
 });
 
 router.get('/__user-agent__', ctx => ctx.body = ctx.userAgent);
-router.get('/test', ctx => {
-    ctx.render('/Users/Konstantin/Documents/SRC/AngryBookmaker/gen-server/static/test.pug')
-});
 
 app
     .use(router.routes())
