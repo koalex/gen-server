@@ -21,9 +21,7 @@ function createDictionary () {
 
     if (process.env.MODULES) {
         process.env.MODULES.split(/\s{0,},\s{0,}/).forEach(m => {
-            serverLocalesPaths.push(
-                glob.sync(m + '/i18n/*.json')
-            );
+            serverLocalesPaths = serverLocalesPaths.concat(glob.sync(m + '/i18n/*.json'));
         });
     }
 
