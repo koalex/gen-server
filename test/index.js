@@ -91,6 +91,18 @@ describe('GEN SERVER', () => {
         });
     });
 
+    describe('LOGGING #log client error', () => {
+        it('should return status 200 for request /log', function (done) {
+            this.slow(200);
+            request
+                .post('/log')
+                .send({message: 'client test error', name: 'Test Error', line: 99})
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .end(done);
+        });
+    });
+
     describe('Outdated browser', () => {
         before(done => {
             addToStaticAsync(`${__dirname}/../fixtures/__test_outdated_browser__.html`).then(() => {

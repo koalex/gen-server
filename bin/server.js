@@ -239,6 +239,15 @@ app.use(async (ctx, next) => {
 });
 
 router.get('/__user-agent__', ctx => ctx.body = ctx.userAgent);
+router.post('/log', require('../middlewares/bodyParser')(), ctx => {
+    const report = ctx.request.body;
+    if (Array.isArray(report)) {
+        report.forEach(r => ctx.log.error(r));
+    } else {
+        ctx.log.error(report);
+    }
+    ctx.status = 200;
+});
 
 app
     .use(router.routes())
