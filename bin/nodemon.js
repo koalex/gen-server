@@ -1,10 +1,9 @@
-const path       = require('path');
-const nodemon    = require('nodemon');
-const ignoreRoot = require('ignore-by-default').directories().filter(dir => !dir.includes('node_modules')); // nodemaon has this dependency
+const path    = require('path');
+const nodemon = require('nodemon');
 
 const watch  = [path.join(__dirname, '../')];
 const ignore = [
-    // 'node_modules', // if set this process.env.MODULES does not work
+    'node_modules',
     'nodemon.js',
     'test/*',
     'static/*',
@@ -18,15 +17,11 @@ const ignore = [
 ];
 
 if (process.env.MODULES) {
-    process.env.MODULES.split(/\s{0,},\s{0,}/).forEach(m => {
-        const modulePath = path.join(__dirname, '../node_modules', m);
-        watch.push(modulePath);
-    });
+    process.env.MODULES.split(/\s{0,},\s{0,}/).forEach(m => watch.push(m));
 }
 
 nodemon({
     script: __dirname + '/server.js',
     watch,
-    ignore,
-    ignoreRoot
+    ignore
 });

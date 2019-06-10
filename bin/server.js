@@ -65,11 +65,11 @@ process
             }
         }, 200);
     })
-	.on('rejectionHandled', p => {
+    .on('rejectionHandled', p => {
         debug('rejectionHandled: ' + unhandledRejections.get(p).message);
         unhandledRejections.delete(p);
-	})
-	.on('uncaughtException', err => {
+    })
+    .on('uncaughtException', err => {
         if (!__TEST__) console.error(err);
         if (__DEV__) {
             notifier.notify({
@@ -81,12 +81,12 @@ process
             });
         }
         debug('uncaughtException: ' + err.message);
-		logger.fatal(err);
-		process.exit(1);
-	})
+        logger.fatal(err);
+        process.exit(1);
+    })
     .on('SIGTERM', onSigintSigtermMessage('SIGTERM'))
     .on('SIGINT', onSigintSigtermMessage('SIGINT'))
-	.on('message', onSigintSigtermMessage('message'));
+    .on('message', onSigintSigtermMessage('message'));
 
 function onSigintSigtermMessage (signal) {
     return function (msg) {
@@ -152,7 +152,7 @@ app.use(helmet());
 app.use(conditional());
 app.use(etag());
 app.use(async (ctx, next) => {
-	await next();
+    await next();
 
     if (!ctx.expires) return;
     ctx.expires = 2;
@@ -190,9 +190,9 @@ let defaultMiddlewares = [
     'outdatedBrowser.js',
     'static.js',
     'compress.js',
-	'logger.js',
-	'templates.js',
-	'errors.js'
+    'logger.js',
+    'templates.js',
+    'errors.js'
 ].map(mw => path.join(config.projectRoot, 'middlewares', mw));
 
 app.use(compose(defaultMiddlewares.map(mw => {
@@ -203,8 +203,8 @@ app.use(compose(defaultMiddlewares.map(mw => {
 })));
 
 app.use(async (ctx, next) => {
-	ctx.log = ns.get('logger');
-	await next();
+    ctx.log = ns.get('logger');
+    await next();
 });
 
 let server;
@@ -226,10 +226,12 @@ switch (config.protocol) {
 const socket = require('../lib/socket.js');
 socket(server);
 
-/** MODULES MUST BE HERE**/
-/*
-* require('module)(app)
-* */
+/** MODULES **/
+if (process.env.MODULES) {
+    process.env.MODULES.split(/\s{0,},\s{0,}/).forEach(m => {
+        require(m)(app);
+    });
+}
 
 app.use(async (ctx, next) => {
     await next();
