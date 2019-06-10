@@ -11,14 +11,21 @@ const glob        = require('glob');
 const notifier    = require('node-notifier');
 const log         = require('../lib/logger');
 
-const messagesDir               = __dirname + '/data';
-const modulesMessagesDirPattern = `${config.projectRoot}/modules/*/i18n`;
+const messagesDir = __dirname + '/data';
 
 createDictionary();
 
 function createDictionary () {
     let dictionary         = {};
-    let serverLocalesPaths = glob.sync(`${modulesMessagesDirPattern}/*.json`).concat(glob.sync(__dirname + '/*.json'));
+    let serverLocalesPaths = [].concat(glob.sync(__dirname + '/*.json'));
+
+    if (process.env.MODULES) {
+        process.env.MODULES.split(/\s{0,},\s{0,}/).forEach(m => {
+            serverLocalesPaths.push(
+                glob.sync(m + '/i18n/*.json')
+            );
+        });
+    }
 
     glob.sync(`${messagesDir}/*.json`).forEach(fs.unlinkSync);
 
