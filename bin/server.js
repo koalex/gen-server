@@ -18,6 +18,7 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 
 const os          	= require('os');
+const fs          	= require('fs');
 const http 			= require('http');
 const https			= require('https');
 const http2 		= require('http2');
@@ -95,6 +96,7 @@ function onSigintSigtermMessage (signal) {
         if (__DEV__) {
             console.info('\n' + signal +' signal received.');
             console.info('Closing server...');
+            fs.unlinkSync(__dirname + '/../process.pid');
         }
         // Stops the server from accepting new connections and finishes existing connections.
         server.close(err => {
@@ -258,6 +260,9 @@ app
 if (!module.parent) {
     server.listen(config.port, () => {
         console.log('SERVER LISTENING ON PORT:', config.port);
+        if (__DEV__) {
+            fs.writeFileSync(__dirname + '/../process.pid', process.pid);
+        }
     });
 }
 
