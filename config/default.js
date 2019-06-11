@@ -45,25 +45,34 @@ module.exports = {
         pass: process.env.REDIS_PASS || null
     },
     mongoose: {
-        uri: defer(cfg => {
-            let uri = `${process.env.MONGOOSE_URI}/${cfg.mongoose.dbName}`;
+        uri: defer(() => {
+            const auth = process.env.MONGOOSE_USER ? `${process.env.MONGOOSE_USER}:${process.env.MONGOOSE_PASS}@` : '';
+            let uri    = `mongodb://${auth}${process.env.MONGOOSE_URI}/${process.env.MONGOOSE_DB_NAME}`;
+
             if (process.env.MONGOOSE_REPL_SET_NAME) {
                 uri += ('?replicaSet=' + process.env.MONGOOSE_REPL_SET_NAME);
             }
             return uri;
         }),
-        dbName: process.env.MONGOOSE_DB_NAME,
         options: {
+            replicaSet: process.env.MONGOOSE_REPL_SET_NAME,
             useNewUrlParser: true,
-            user: process.env.MONGOOSE_USER,
-            pass: process.env.MONGOOSE_PASS,
-            autoIndex: false,
-            keepAlive: 1,
-            poolSize: 5,
-            connectTimeoutMS: 0,
-            socketTimeoutMS: 0,
+            useFindAndModify: false,
+            useCreateIndex: false,
+            dbName: process.env.MONGOOSE_DB_NAME,
+            // user: process.env.MONGOOSE_USER,
+            // pass: process.env.MONGOOSE_PASS,
+            autoIndex: false, // Don't build indexes
+            reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+            reconnectInterval: 500, // Reconnect every 500ms
+            keepAlive: 120,
+            keepAliveInitialDelay: 300000,
+            poolSize: 10,
+            connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
             promiseLibrary: global.Promise,
-            bufferMaxEntries: 0
+            bufferMaxEntries: 0,
+            // family: 4
         }
     },
 
