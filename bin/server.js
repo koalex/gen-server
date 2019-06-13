@@ -40,7 +40,6 @@ const responseTime  = require('koa-response-time');
 const conditional   = require('koa-conditional-get');
 const etag          = require('koa-etag');
 const compose       = require('koa-compose');
-const glob          = require('glob');
 const notifier    	= require('node-notifier');
 const i18n          = require('../i18n/index');
 
