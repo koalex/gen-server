@@ -72,6 +72,7 @@ process
     .on('uncaughtException', err => {
         if (!__TEST__) console.error(err);
         if (__DEV__) {
+            if (err.message.includes('EADDRINUSE')) return process.exit(0);
             notifier.notify({
                 title: 'NODE.js: uncaughtException',
                 message: err.message,
@@ -117,11 +118,11 @@ function onSigintSigtermMessage (signal) {
 if (__DEV__) {
     process.once('SIGUSR2', () => { // for nodemon
         console.info('SIGUSR2 signal received.');
-        process.kill(process.pid, 'SIGUSR2');
-        /*server.close(err => {
+        // process.kill(process.pid, 'SIGUSR2');
+        server.close(err => {
             if (err) console.error(err);
             process.kill(process.pid, 'SIGUSR2');
-        });*/
+        });
     });
 }
 
