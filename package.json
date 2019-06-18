@@ -85,7 +85,7 @@
         "koa-useragent": "^1.2.1",
         "koa2-cors": "^2.0.6",
         "lru-cache": "^5.1.1",
-        "mongoose": "^5.5.15",
+        "mongoose": "^5.6.0",
         "mongoose-unique-validator": "^2.0.3",
         "ncp": "^2.0.0",
         "node-notifier": "^5.4.0",
@@ -108,7 +108,7 @@
         "env-cmd": "^9.0.3",
         "husky": "^2.4.1",
         "mocha": "^6.1.4",
-        "npm-check-updates": "^3.1.10",
+        "npm-check-updates": "^3.1.11",
         "nyc": "^14.1.1",
         "retire": "^2.0.2",
         "supertest": "^4.0.2"
