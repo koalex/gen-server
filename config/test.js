@@ -17,5 +17,6 @@ module.exports = {
         'https://localhost:8080',
         'https://localhost:9000'
     ],
-    secret: ['test1', 'test2']
+    keys: ['test1', 'test2'],
+    secret: 'someStrWithLowerAndUpperCase'
 };
