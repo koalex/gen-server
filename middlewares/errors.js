@@ -15,7 +15,7 @@ module.exports = async (ctx, next) => {
     try {
         await next();
 
-        if (ctx.response && ctx.response.status && ctx.response.status == 404 && !~ctx.request.url.indexOf('hot-update.json')) {
+        if (ctx.response && ctx.response.status && ctx.response.status === 404 && !~ctx.request.url.indexOf('hot-update.json')) {
             ctx.throw(404);
         }
     } catch (err) {
@@ -54,15 +54,7 @@ module.exports = async (ctx, next) => {
         // TODO: для type = text сделать (проверрить) вывод ошибки
         let preferredType = (ctx.type && ctx.type.includes('json')) ? 'json' : ctx.accepts('html', 'text', 'json');
 
-        if (err.name === 'CastError' && __PROD__) {
-            ctx.status = 400;
-        } else if ('ValidationError' === err.name) {
-            ctx.status = 400;
-        } else if (__PROD__ && ctx.status > 501) {
-            ctx.status = 500;
-        } else {
-            ctx.status = err.status ? err.status : (err.statusCode ? err.statusCode : 500);
-        }
+        ctx.status = getStatus(err, ctx);
 
         ctx.set('Content-Language', ctx.i18n.locale);
 
@@ -93,9 +85,9 @@ module.exports = async (ctx, next) => {
 };
 
 function getMessage (err, ctx, type = 'json') {
-    let message;
+    let message, status = getStatus(err, ctx);
 
-    if (429 == ctx.status) {
+    if (429 === ctx.status || 429 === err.status) {
         let time = /second/i.test(err.message) ? ctx.i18n.__('SECONDS') : ctx.i18n.__('MILLISECONDS');
         message = `${ctx.i18n.__('httpErrors.' + ctx.status)}, ${ctx.i18n.__('RETRY_IN')} ${err.message.match(/\d+/)[0]}${time}.`;
     } else if ('ValidationError' === err.name) {
@@ -116,8 +108,8 @@ function getMessage (err, ctx, type = 'json') {
             if (('string' === typeof err.message)) {
                 if ( /^Cast/i.test(err.message)) {
                     message = ctx.i18n.__('BAD_VALUE');
-                } else if (ctx.i18n.locales['en'].httpErrors[ctx.status].toUpperCase() === err.message.toUpperCase()) {
-                    message = ctx.i18n.__('httpErrors.' + ctx.status);
+                } else if (ctx.i18n.locales['en'].httpErrors[status].toUpperCase() === err.message.toUpperCase()) {
+                    message = ctx.i18n.__('httpErrors.' + status);
                 }
             }
         }
@@ -134,7 +126,7 @@ function getMessage (err, ctx, type = 'json') {
                     if (/^Cast/i.test(data.message)) {
                         data.message = ctx.i18n.__('BAD_VALUE');
                     }
-                    return data.message;
+                    return ctx.i18n.__(data.message);
                 }
                 if (/^Cast/i.test(data)) {
                     data = ctx.i18n.__('BAD_VALUE');
@@ -143,16 +135,32 @@ function getMessage (err, ctx, type = 'json') {
             }).join(', ');
         } else if ('object' === typeof message) {
             if (message.message) {
-                message = /^Cast/i.test(message.message) ? ctx.i18n.__('BAD_VALUE') : message.message;
+                message = /^Cast/i.test(message.message) ? ctx.i18n.__('BAD_VALUE') : ctx.i18n.__(message.message);
             } else {
-                message = ctx.i18n.__('httpErrors.' + ctx.status);
+                message = ctx.i18n.__('httpErrors.' + status);
             }
         }
     }
 
     // if (!__DEV__ && ctx.status > 501) message = TODO
 
-    if (!message) message = ctx.i18n.__('httpErrors.' + ctx.status);
+    if (!message) message = ctx.i18n.__('httpErrors.' + status);
 
     return message;
+}
+
+function getStatus (err, ctx) {
+    let status;
+
+    if (err.name === 'CastError' && __PROD__) {
+        status = 400;
+    } else if ('ValidationError' === err.name) {
+        status = 400;
+    } else if (__PROD__ && (err.status > 501 || ctx.status > 501)) {
+        status = 500;
+    } else {
+        status = err.status ? err.status : (err.statusCode ? err.statusCode : 500);
+    }
+
+    return status
 }
