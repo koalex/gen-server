@@ -126,7 +126,7 @@ if (__DEV__) {
     });
 }
 
-app.keys = new KeyGrip(config.secret, 'sha512');
+app.keys = new KeyGrip(config.keys, 'sha512');
 
 /*
 	If NGINX (or another proxy-server) then set to true
