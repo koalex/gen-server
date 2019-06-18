@@ -1,5 +1,6 @@
 'use strict';
 
 module.exports = {
-    secret: ['qwerty1', 'qwerty2']
+    keys: ['qwerty1', 'qwerty2'],
+    secret: 'someStrWithLowerAndUpperCase'
 };
