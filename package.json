@@ -56,6 +56,7 @@
     "dependencies": {
         "accept-language": "^3.0.18",
         "async-busboy": "^0.7.0",
+        "boxen": "^4.1.0",
         "bunyan": "^1.8.12",
         "chokidar": "^3.0.1",
         "clarify": "^2.1.0",
