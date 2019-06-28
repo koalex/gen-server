@@ -87,7 +87,7 @@ describe('GEN SERVER', () => {
             receiver.on('__TEST__', message => {
                 assert.strictEqual(message, testMessage);
                 done();
-            })
+            });
         });
     });
 

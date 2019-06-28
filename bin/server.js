@@ -230,8 +230,7 @@ switch (config.protocol) {
         break;
 }
 
-const socket = require('../lib/socket.js');
-socket(server);
+const io = require('../lib/socket.js')(server);
 
 /** MODULES **/
 if (process.env.MODULES) {
