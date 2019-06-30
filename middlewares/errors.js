@@ -94,9 +94,19 @@ function getMessage (err, ctx, type = 'json') {
         message = [];
 
         for (let field in err.errors) {
+            let _message;
+
+            if ( /^Cast/i.test(err.errors[field].message)) {
+                _message = ctx.i18n.__('BAD_VALUE');
+            } else if (/unique/i.test('err.errors[field].message')) {
+                _message = ctx.i18n.__('NOT_UNIQUE');
+            } else {
+                _message = ctx.i18n.__(err.errors[field].message);
+            }
+
             message.push({
                 field,
-                message: /^Cast/i.test(err.errors[field].message) ? ctx.i18n.__('BAD_VALUE') : ctx.i18n.__(err.errors[field].message)
+                message: _message
             });
         }
     } else {
@@ -108,6 +118,8 @@ function getMessage (err, ctx, type = 'json') {
             if (('string' === typeof err.message)) {
                 if ( /^Cast/i.test(err.message)) {
                     message = ctx.i18n.__('BAD_VALUE');
+                } else if (/unique/i.test(err.message)) {
+                    message = ctx.i18n.__('NOT_UNIQUE');
                 } else if (ctx.i18n.locales['en'].httpErrors[status].toUpperCase() === err.message.toUpperCase()) {
                     message = ctx.i18n.__('httpErrors.' + status);
                 }
@@ -125,11 +137,15 @@ function getMessage (err, ctx, type = 'json') {
                 if (data.message) {
                     if (/^Cast/i.test(data.message)) {
                         data.message = ctx.i18n.__('BAD_VALUE');
+                    } else if (/unique/i.test(data.message)) {
+                        data.message = ctx.i18n.__('NOT_UNIQUE');
                     }
                     return ctx.i18n.__(data.message);
                 }
                 if (/^Cast/i.test(data)) {
                     data = ctx.i18n.__('BAD_VALUE');
+                } else if (/unique/i.test(data)) {
+                    data.message = ctx.i18n.__('NOT_UNIQUE');
                 }
                 return data;
             }).join(', ');

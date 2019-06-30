@@ -9,6 +9,7 @@
   "RETRY_IN": "retry in",
   "MILLISECONDS": "ms",
   "SECONDS": "seconds",
+  "NOT_UNIQUE": "expected value to be unique",
   "httpErrors": {
     "400": "bad request",
     "401": "unauthorized",
