@@ -262,8 +262,9 @@ app
     .use(router.allowedMethods({throw: false}));
 
 if (!module.parent) {
-    server.listen(config.port, () => {
-        console.log('SERVER LISTENING ON PORT:', config.port);
+	const port = Number(config.port) + (process.env.NODE_APP_INSTANCE ? Number(process.env.NODE_APP_INSTANCE) : 0);
+    server.listen(port, () => {
+        console.log('SERVER LISTENING ON PORT:', port);
         if (__DEV__) {
             fs.writeFileSync(__dirname + '/../process.pid', process.pid);
         }
