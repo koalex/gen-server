@@ -127,35 +127,38 @@ function getMessage (err, ctx, type = 'json') {
         }
     }
 
-    if ('json' === type) {
-        if ('string' === typeof message) {
-            message = { message: /^Cast/i.test(message) ? ctx.i18n.__('BAD_VALUE') : message };
-        }
-    } else {
-        if (Array.isArray(message)) {
-            message = message.map(data => {
-                if (data.message) {
-                    if (/^Cast/i.test(data.message)) {
-                        data.message = ctx.i18n.__('BAD_VALUE');
-                    } else if (/unique/i.test(data.message)) {
-                        data.message = ctx.i18n.__('NOT_UNIQUE');
-                    }
-                    return ctx.i18n.__(data.message);
-                }
-                if (/^Cast/i.test(data)) {
-                    data = ctx.i18n.__('BAD_VALUE');
-                } else if (/unique/i.test(data)) {
+    if (Array.isArray(message)) {
+        message = message.map(data => {
+            if (data.message) {
+                if (/^Cast/i.test(data.message)) {
+                    data.message = ctx.i18n.__('BAD_VALUE');
+                } else if (/unique/i.test(data.message)) {
                     data.message = ctx.i18n.__('NOT_UNIQUE');
+                } else {
+                    data.message = ctx.i18n.__(data.message);
                 }
-                return data;
-            }).join(', ');
-        } else if ('object' === typeof message) {
-            if (message.message) {
-                message = /^Cast/i.test(message.message) ? ctx.i18n.__('BAD_VALUE') : ctx.i18n.__(message.message);
-            } else {
-                message = ctx.i18n.__('httpErrors.' + status);
+                // return data
             }
+            if (/^Cast/i.test(data)) {
+                return ctx.i18n.__('BAD_VALUE');
+            } else if (/unique/i.test(data)) {
+                data.message = ctx.i18n.__('NOT_UNIQUE');
+            }
+            return ('json' === type ? data : data.message);
+        });
+
+        if ('json' !== type) message = message.join(', ');
+
+    } else if ('object' === typeof message) {
+        if (message.message) {
+            message = /^Cast/i.test(message.message) ? ctx.i18n.__('BAD_VALUE') : ctx.i18n.__(message.message);
+        } else {
+            message = ctx.i18n.__('httpErrors.' + status);
         }
+    }
+
+    if ('json' === type && 'string' === typeof message) {
+        message = { message: /^Cast/i.test(message) ? ctx.i18n.__('BAD_VALUE') : message };
     }
 
     // if (!__DEV__ && ctx.status > 501) message = TODO

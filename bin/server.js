@@ -145,7 +145,14 @@ app.use(responseTime());
 
 if (process.env.TRACE) require('../lib/trace')();
 app.use((ctx, next) => {
-    const origin = config.origins.find(origin => origin === ctx.origin);
+    let origin;
+
+    if (!__PROD__ && !origin && ctx.headers && ctx.headers.origin) {
+        origin = config.origins.find(origin => origin === ctx.headers.origin);
+    } else {
+        origin = config.origins.find(origin => origin === ctx.origin);
+    }
+
     if (origin) {
         return cors({
             origin

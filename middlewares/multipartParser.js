@@ -25,7 +25,7 @@ module.exports = function (opts = {}) {
         fields: opts.fields || 200, // NO-FILE-fields max
         files: opts.files || 30, // FILE-fields max
         fieldSize: opts.fieldSize || 1000000 * 20, // MAX FILE SIZE (in bytes) 20MB
-        parts: this.fields + this.files, // max files
+        parts: (opts.fields || 200) + (opts.files || 30), // max files
       }
     });
 
