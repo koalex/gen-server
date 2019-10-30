@@ -33,7 +33,9 @@ module.exports = {
     protocol: process.env.PROTOCOL || 'http',
     host: process.env.HOST || 'localhost',
     port: isNaN(Number(process.env.PORT)) ? 3000 : Number(process.env.PORT),
-    origins: process.env.ORIGINS ? process.env.ORIGINS.split(/\s{0,},\s{0,}/) : [],
+    origins: (process.env.ORIGINS ? process.env.ORIGINS.split(/\s{0,},\s{0,}/) : []).concat(
+        process.env.ORIGIN || []
+    ),
     staticRoot: join(__dirname, '../', './static'),
     projectRoot: join(__dirname, '../'),
     logsRoot: process.env.LOGS_PATH || join(__dirname, '../', './logs'),
