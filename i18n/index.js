@@ -35,7 +35,7 @@ function createDictionary () {
         try {
             dictionary[locale] = Object.assign(dictionary[locale], require(localePath));
         } catch (err) {
-            if ('syntaxerror' == err.name.toLowerCase()) {
+            if ('syntaxerror' === err.name.toLowerCase()) {
                 let message = 'i18n: Cannot load locale at path ' + localePath + ' because file is not valid JSON.';
                 if (__DEV__ || __DEBUG__) {
                     notifier.notify(
@@ -43,7 +43,7 @@ function createDictionary () {
                             title: 'NODE.js: i18n',
                             message: message,
                             // icon: path.join(__dirname, 'icon.jpg'), // Absolute path (doesn't work on balloons)
-                            sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                            sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                             wait: true
                         }
                     );
@@ -57,7 +57,7 @@ function createDictionary () {
                             title: 'NODE.js: i18n',
                             message: err.message,
                             // icon: path.join(__dirname, 'icon.jpg'), // Absolute path (doesn't work on balloons)
-                            sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                            sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                             wait: true
                         }
                     );
