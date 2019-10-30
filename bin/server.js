@@ -60,7 +60,7 @@ process
                         title: 'NODE.js: unhandledRejection',
                         message: err.message,
                         // icon: path.join(__dirname, 'icon.jpg'), // Absolute path (doesn't work on balloons)
-                        sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                        sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                         wait: true
                     });
                 }
