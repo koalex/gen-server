@@ -4,7 +4,7 @@ const config = require('config');
 let secure = false;
 if (config.protocol == 'https' || config.protocol == 'http2' || config.protocol == 'http/2') {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-    secure = true
+    secure = true;
 }
 const assert        = require('assert');
 const fs			= require('fs');
