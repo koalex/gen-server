@@ -13,7 +13,7 @@ module.exports = function (paths) {
                     notifier.notify({
                         title: 'NODE.js: removeFromStatic Error',
                         message: err.message,
-                        sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                        sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                         wait: true
                     });
                 } else {
@@ -29,7 +29,7 @@ module.exports = function (paths) {
                 notifier.notify({
                     title: 'NODE.js: removeFromStatic Error',
                     message: err.message,
-                    sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                    sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                     wait: true
                 });
             } else {
