@@ -26,7 +26,7 @@ module.exports = async (ctx, next) => {
                 title: 'NODE.js: Error',
                 message: getMessage(err, ctx, 'text'), // FIXME: [Object object]
                 // icon: path.join(__dirname, 'icon.jpg'), // Absolute path (doesn't work on balloons)
-                sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                 wait: true
             });
         }
