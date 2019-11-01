@@ -33,6 +33,7 @@ module.exports = function (opts = {}) {
 
     for (let key in fields) {
       ctx.request.body[key] = fields[key];
+      if (opts.noParseNullUndefined) continue;
       if ('null' === fields[key]) ctx.request.body[key] = null;
       if ('undefined' === fields[key]) ctx.request.body[key] = undefined;
     }
