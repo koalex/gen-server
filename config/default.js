@@ -61,6 +61,7 @@ module.exports = {
             useNewUrlParser: true,
             useFindAndModify: false,
             useCreateIndex: false,
+            useUnifiedTopology: true,
             dbName: process.env.MONGOOSE_DB_NAME,
             // user: process.env.MONGOOSE_USER,
             // pass: process.env.MONGOOSE_PASS,
