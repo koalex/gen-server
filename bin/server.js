@@ -7,13 +7,13 @@ global.__TEST__  = process.env.NODE_ENV === 'test';
 global.__DEBUG__ = process.env.NODE_ENV === 'debug' || process.env.NODE_ENV === 'debugging';
 
 const semver = require('semver');
+const nodeVersionRequired = require('../package.json').engines.node.match(/[0-9]{1,2}\.?[0-9]{0,2}\.?[0-9]{0,2}/)[0];
 
-if (semver.lt(semver.clean(process.versions.node), '10.10.0') || parseFloat(process.versions.v8) < 6.8) {
+if (semver.lt(semver.clean(process.versions.node), nodeVersionRequired)) {
     const boxen = require('boxen');
-    const text = 'Для запуска требуется Node.js v10.10.0 и выше\n' +
-                 'Для запуска требуется V8 v6.8 и выше\n' +
-                 'Текущая версия Node.js: ' + process.versions.node +
-                 '\nТекущая версия V8: ' + process.versions.v8;
+    const text = 'Для запуска требуется Node.js v' + nodeVersionRequired +' и выше\n' +
+        'Текущая версия Node.js: ' + process.versions.node +
+        '\nТекущая версия V8: ' + process.versions.v8;
     console.log(boxen(text, {padding: 1, margin: 1, borderStyle: 'doubleSingle', borderColor: 'cyan'}));
     process.exit(0);
 }
