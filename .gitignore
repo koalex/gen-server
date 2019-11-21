@@ -2,6 +2,7 @@
 
 # Project files #
 #################
+package-lock.json
 .idea/
 .vscode/
 ssl/*
