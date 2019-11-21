@@ -3,6 +3,10 @@
     "version": "1.0.0",
     "description": "Node.js gen server based on Koa.js framework.",
     "main": "./bin/server.js",
+    "bin": {
+        "gen-server": "./bin/server.js",
+        "gen-server-dev": "./bin/nodemon.js"
+    },
     "scripts": {
         "start": "cross-env NODE_ENV=production node ./bin/server.js",
         "dev": "cross-env NODE_ENV=development node ./bin/nodemon.js",
