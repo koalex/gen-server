@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: process.env.ENV_PATH || path.resolve(process.cwd(), '.env') });
 
 const config = require('config');
 let secure = false;
@@ -8,7 +9,6 @@ if (config.protocol == 'https' || config.protocol == 'http2' || config.protocol 
 }
 const assert        = require('assert');
 const fs			= require('fs');
-const path          = require('path');
 const uuid          = require('uuid/v4');
 const server        = require(__dirname + '/../bin/server.js');
 const request       = require('supertest')(server);

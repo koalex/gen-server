@@ -17,8 +17,8 @@ if (semver.lt(semver.clean(process.versions.node), '10.10.0') || parseFloat(proc
     console.log(boxen(text, {padding: 1, margin: 1, borderStyle: 'doubleSingle', borderColor: 'cyan'}));
     process.exit(0);
 }
-require('dotenv').config();
 const path = require('path');
+require('dotenv').config({ path: process.env.ENV_PATH || path.resolve(process.cwd(), '.env') });
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '../config');
 // require('events').EventEmitter.defaultMaxListeners = Infinity;
 
@@ -34,7 +34,7 @@ const app           = new koa();
 const Router        = require('../lib/router');
 const router        = new Router;
 const cors 			= require('koa2-cors');
-const CLS           = require('cls-hooked');
+const CLS           = require('cls-hooked'); // https://github.com/aigoncharov/cls-proxify
 const ns            = CLS.createNamespace(config.appName);
 const debug         = require('../lib/debug');
 const logger        = require('../lib/logger');
@@ -82,7 +82,7 @@ process
                 title: 'NODE.js: uncaughtException',
                 message: err.message,
                 // icon: path.join(__dirname, 'icon.jpg'), // Absolute path (doesn't work on balloons)
-                sound: ('DARWIN' == os.type().toUpperCase()) ? 'Blow' : true,
+                sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
                 wait: true
             });
         }
