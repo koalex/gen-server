@@ -36,7 +36,7 @@ module.exports = {
     origins: (process.env.ORIGINS ? process.env.ORIGINS.split(/\s{0,},\s{0,}/) : []).concat(
         process.env.ORIGIN || []
     ),
-    staticRoot: join(__dirname, '../', './static'),
+    staticRoot: process.env.STATIC_PATH || join(__dirname, '../', './static'),
     projectRoot: join(__dirname, '../'),
     logsRoot: process.env.LOGS_PATH || join(__dirname, '../', './logs'),
     uploadsRoot: process.env.UPLOADS_PATH || join(__dirname, '../', './data'),
