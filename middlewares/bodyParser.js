@@ -6,6 +6,7 @@ module.exports = function (opts = {}) {
     return koaBodyParser({
         formLimit: opts.formLimit || '1mb',
         jsonLimit: opts.jsonLimit || '1mb',
-        textLimit: opts.textLimit || '1mb'
+        textLimit: opts.textLimit || '1mb',
+        ...opts
     });
 };
