@@ -3,7 +3,7 @@ require('dotenv').config({ path: process.env.ENV_PATH || path.resolve(process.cw
 
 const config = require('config');
 let secure = false;
-if (config.protocol == 'https' || config.protocol == 'http2' || config.protocol == 'http/2') {
+if (['https', 'http2', 'http/2'].some(protocol => config.protocol === protocol)) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     secure = true;
 }
