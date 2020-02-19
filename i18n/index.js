@@ -1,5 +1,3 @@
-'use strict';
-
 const os          = require('os');
 const fs          = require('fs');
 const path        = require('path');
@@ -112,7 +110,13 @@ module.exports = function (app) {
         if (ctx.i18n.locale) {
             ctx.i18n._locale = ctx.i18n.locale; // ctx.i18n._locale = ru-RU
             if (!locales.some(locale => ctx.i18n.locale === locale)) {
-                let localeShort = ((ctx.i18n.locale).match(/[a-z]{2,3}/i)[0]).toLowerCase();
+                let localeShort;
+                let match = ctx.i18n.locale.match(/[a-z]{2,3}/i);
+                if (match) {
+                    localeShort = match[0].toLowerCase();
+                } else {
+                    localeShort = config.defaultLocale;
+                }
 
                 if (locales.some(locale => localeShort === locale)) {
                     ctx.i18n.locale = localeShort;
