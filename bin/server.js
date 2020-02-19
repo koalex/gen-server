@@ -120,16 +120,6 @@ function onSigintSigtermMessage (signal) {
     logger.fatal(err);
 });*/
 
-if (__DEV__) {
-    process.once('SIGUSR2', () => { // for nodemon
-        console.info('SIGUSR2 signal received.');
-        // process.kill(process.pid, 'SIGUSR2');
-        server.close(err => {
-            if (err) console.error(err);
-            process.kill(process.pid, 'SIGUSR2');
-        });
-    });
-}
 
 app.keys = new KeyGrip(config.keys, 'sha512');
 
@@ -180,14 +170,14 @@ app.use(async (ctx, next) => {
         ns.bindEmitter(ctx.req);
         ns.bindEmitter(ctx.res);
         ns.run(async () => {
-            let requestId = Number((Math.random() + '').replace(/^0\./,''));
+            const requestId = Number((Math.random() + '').replace(/^0\./,''));
             try {
                 ns.set('requestId', requestId);
                 await next();
                 resolve();
             } finally {
-                let nsLogger = ns.get('logger');
-                if (nsLogger && nsLogger.fields.requestId != requestId) {
+                const nsLogger = ns.get('logger');
+                if (nsLogger && nsLogger.fields.requestId !== requestId) {
                     console.error('CLS: wrong context', ns.get('logger').fields.requestId, 'should be', requestId);
                 }
                 resolve();
@@ -199,7 +189,7 @@ app.use(async (ctx, next) => {
 i18n(app);
 
 /** DEFAULT MIDDLEWARES **/
-let defaultMiddlewares = [
+const defaultMiddlewares = [
     'rateLimit.js',
     'outdatedBrowser.js',
     'static.js',
@@ -235,6 +225,25 @@ switch (config.protocol) {
     case 'http/2':
         server = http2.createSecureServer(config.ssl, app.callback());
         break;
+}
+
+if (__DEV__) {
+    const socketsMap = {};
+    let i = 0;
+    server.on('connection', socket => {
+        const socketId = ++i;
+        socketsMap[socketId] = socket;
+        socket.on('close', () => { delete socketsMap[socketId]; });
+    });
+
+    process.once('SIGUSR2', () => { // for nodemon
+        console.info('SIGUSR2 signal received.');
+        server.close(err => {
+            if (err) console.error(err);
+            process.kill(process.pid, 'SIGUSR2');
+        });
+        Object.values(socketsMap).forEach(socket => socket.destroy());
+    });
 }
 
 const io = require('../lib/socket.js')(server);
