@@ -21,7 +21,7 @@ if (process.env.MODULES) {
 }
 
 nodemon({
-    delay: 1500,
+    delay: 500,
     script: __dirname + '/server.js',
     watch,
     ignore
