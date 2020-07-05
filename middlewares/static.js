@@ -19,7 +19,7 @@ module.exports = async (ctx, next) => {
     await serve(staticPath, {
         defer: false,
         index: 'index.html',
-        maxage : __DEV__ ? 0 : 86400000*30, // 30 days
+        maxage: __DEV__ ? 0 : 86400000*30, // 30 days
         gzip: true,
         hidden: false
     })(ctx, next);
