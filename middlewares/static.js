@@ -12,10 +12,6 @@ module.exports = async (ctx, next) => {
         return await next();
     }
 
-    /*if (/^[\\/]{1,2}static[\\/]/.test(url)) { // FIXME: CRA создаёт такую папку  с именем static и не отдаёт статику
-        staticPath = config.uploadsRoot;
-    }*/
-
     await serve(staticPath, {
         defer: false,
         index: 'index.html',
