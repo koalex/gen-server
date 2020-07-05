@@ -1,3 +1,4 @@
+const cluster     = require('cluster');
 const os          = require('os');
 const fs          = require('fs');
 const path        = require('path');
@@ -11,7 +12,7 @@ const log         = require('../lib/logger');
 
 const messagesDir = __dirname + '/data';
 
-createDictionary();
+if (cluster.isMaster || (!cluster.isMaster && !cluster.isWorker)) createDictionary();
 
 function createDictionary () {
     let dictionary         = {};
