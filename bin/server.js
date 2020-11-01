@@ -90,30 +90,30 @@ process
         logger.fatal(err);
         process.exit(1);
     })
-    .on('SIGTERM', onSigintSigtermMessage('SIGTERM'))
-    .on('SIGINT', onSigintSigtermMessage('SIGINT'))
-    .on('message', onSigintSigtermMessage('message'));
+    .on('SIGTERM', onSigintSigterm)
+    .on('SIGINT', onSigintSigterm)
+    .on('message', onSigintSigterm); // windows
 
-function onSigintSigtermMessage (signal) {
-    return function (msg) {
-        if ('message' === signal && 'shutdown' !== msg) return; // windows
-
-        if (__DEV__) {
-            console.info('\n' + signal +' signal received.');
-            console.info('Closing server...');
-            fs.unlinkSync(__dirname + '/../process.pid');
-        }
-        // Stops the server from accepting new connections and finishes existing connections.
-        server.close(err => {
-            if (err) {
-                console.error(err);
-                logger.fatal(err);
-                return process.exit(1);
-            }
-            process.exit(0);
-        });
+function onSigintSigterm(signal) {
+    if (['SIGTERM', 'SIGINT', 'shutdown'].every(s => s !== signal)) {
+        return;
     }
+    if (__DEV__) {
+        console.info('\n' + signal +' signal received.');
+        console.info('Closing server...');
+        fs.unlinkSync(__dirname + '/../process.pid');
+    }
+    // Stops the server from accepting new connections and finishes existing connections.
+    server.close(err => {
+        if (err) {
+            console.error(err);
+            logger.fatal(err);
+            return process.exit(1);
+        }
+        process.exit(0);
+    });
 }
+
 // TODO: ?
 /*app.on('error', (err, ctx) => {
     if (err.code === 'ENOENT') ctx.status = 404;
