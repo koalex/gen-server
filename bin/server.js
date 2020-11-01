@@ -282,7 +282,7 @@ if (!module.parent) {
     server.listen(port, () => {
         console.log('SERVER LISTENING ON PORT:', port);
         if (__DEV__) {
-            fs.writeFileSync(__dirname + '/../process.pid', process.pid);
+            fs.writeFileSync(__dirname + '/../process.pid', process.pid.toString());
         }
     });
 }
