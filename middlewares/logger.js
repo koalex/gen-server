@@ -1,15 +1,14 @@
-'use strict';
+import config from 'config';
+import CLS from 'cls-hooked';
+import logger from '../lib/logger.js';
 
-const config = require('config');
-const CLS    = require('cls-hooked');
-const ns     = CLS.getNamespace(config.appName);
-const logger = require('../lib/logger');
+const ns = CLS.getNamespace(config.appName);
 
-module.exports = async (ctx, next) => {
-	ctx.log = logger.child({
-		requestId: ns.get('requestId'),
-		level: 'error'
-	});
-	ns.set('logger', ctx.log);
-	await next();
+export default async (ctx, next) => {
+  ctx.log = logger.child({
+    requestId: ns.get('requestId'),
+    level: 'error'
+  });
+  ns.set('logger', ctx.log);
+  await next();
 };

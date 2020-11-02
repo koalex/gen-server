@@ -1,67 +1,61 @@
-'use strict';
+import { extname } from 'path';
+import config from 'config';
+import pug from 'pug';
+import CLS from 'cls-hooked';
 
-const path          = require('path');
-const extname       = path.extname;
-const config        = require('config');
-const pug           = require('pug');
-const CLS           = require('cls-hooked');
-
-module.exports = async (ctx, next) => {
-    class Locals {
-        constructor(locs) {
-            this.userAgent  = ctx.userAgent;
-            this.locale     = CLS.getNamespace(config.appName).get('locale');
-            for (let key in locs) this[key] = locs[key];
-        }
-        get i18n() {
-            return ctx.i18n; // assets manifest from webpack
-        }
-        get user() {
-            return (ctx.state && ctx.state.user) ? ctx.state.user : null; // passport sets this further
-        }
-        get href () {
-            return ctx.href;
-        }
-        get alternates () {
-            const _url = new URL(ctx.href);
-            let alt = Object.keys(ctx.i18n.locales).filter(locale => locale !== ctx.i18n.locale).map(locale => {
-                _url.searchParams.set('locale', locale);
-
-                return '<link rel="alternate" hreflang="' + locale + '" href="' + _url.href + '" >'
-            });
-            _url.searchParams.delete('locale');
-            alt.push('<link rel="alternate" hreflang="x-default" href="' + _url.href + '" >');
-
-            return alt;
-        }
-        get pretty() {
-            return false;
-        }
-        get debug() {
-            return __DEBUG__;
-        }
-        get __DEV__() {
-            return __DEV__;
-        }
+export default async (ctx, next) => {
+  class Locals {
+    constructor(locs) {
+      this.userAgent = ctx.userAgent;
+      this.locale = CLS.getNamespace(config.appName).get('locale');
+      for (let key in locs) this[key] = locs[key];
     }
-    ctx.renderString = (pugStr, locals) => {
-        let localsFull = new Locals(locals);
+    get i18n() {
+      return ctx.i18n; // assets manifest from webpack
+    }
+    get user() {
+      return (ctx.state && ctx.state.user) ? ctx.state.user : null; // passport sets this further
+    }
+    get href () {
+      return ctx.href;
+    }
+    get alternates () {
+      const _url = new URL(ctx.href);
+      let alt = Object.keys(ctx.i18n.locales).filter(locale => locale !== ctx.i18n.locale).map(locale => {
+        _url.searchParams.set('locale', locale);
 
-        return pug.render(pugStr, localsFull);
-    };
+        return '<link rel="alternate" hreflang="' + locale + '" href="' + _url.href + '" >'
+      });
+      _url.searchParams.delete('locale');
+      alt.push('<link rel="alternate" hreflang="x-default" href="' + _url.href + '" >');
 
-    ctx.renderToString = (templatePath, locals = {}) => {
-        let localsFull = new Locals(locals);
-        let path2file  = templatePath;
+      return alt;
+    }
+    get pretty() {
+      return false;
+    }
+    get __DEV__() {
+      return process.env.NODE_ENV === 'development';
+    }
+  }
+  ctx.renderString = (pugStr, locals) => {
+    let localsFull = new Locals(locals);
 
-        if (extname(path2file) !== '.pug') path2file += '.pug';
+    return pug.render(pugStr, localsFull);
+  };
 
-        return pug.renderFile(path2file, localsFull);
-    };
+  ctx.renderToString = (templatePath, locals = {}) => {
+    let localsFull = new Locals(locals);
+    let path2file  = templatePath;
 
-    ctx.render = (templatePath, locals = {}) => {
-        return (ctx.body = ctx.renderToString(templatePath, locals));
-    };
+    if (extname(path2file) !== '.pug') path2file += '.pug';
 
-    await next();
+    return pug.renderFile(path2file, localsFull);
+  };
+
+  ctx.render = (templatePath, locals = {}) => {
+    return (ctx.body = ctx.renderToString(templatePath, locals));
+  };
+
+  await next();
 };

@@ -1,17 +1,14 @@
-'use strict';
-
-const fs          = require('fs');
-const extname     = require('path').extname;
-const config      = require('config');
-const join        = require('path').join;
-const asyncBusboy = require('async-busboy');
-const crypto      = require('crypto');
-const uuid        = require('uuid');
+import fs from 'fs';
+import { extname, join } from 'path';
+import config from 'config';
+import asyncBusboy from 'async-busboy';
+import crypto from 'crypto';
+import uuid from 'uuid';
 
 if (!fs.existsSync(config.uploadsRoot)) fs.mkdirSync(config.uploadsRoot);
 if (!fs.existsSync(join(config.uploadsRoot, 'static'))) fs.mkdirSync(join(config.uploadsRoot, 'static'));
 
-module.exports = function (opts = {}) {
+export default function(opts = {}) {
   return async (ctx, next) => {
     let contentType = ctx.get('content-type') || '';
 
@@ -66,7 +63,7 @@ module.exports = function (opts = {}) {
   }
 };
 
-async function parseFile ({ ctx, file, opts }) {
+async function parseFile({ ctx, file, opts }) {
   let fieldname = file.fieldname;
 
   if (!(ctx.request.body[fieldname] === undefined || ctx.request.body[fieldname] === null)) {

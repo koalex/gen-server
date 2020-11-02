@@ -1,12 +1,10 @@
-'use strict';
+import koaBodyParser from 'koa-bodyparser'; // application/json , application/x-www-form-urlencoded ONLY
 
-const koaBodyParser = require('koa-bodyparser'); // application/json , application/x-www-form-urlencoded ONLY
-
-module.exports = function (opts = {}) {
-    return koaBodyParser({
-        formLimit: opts.formLimit || '1mb',
-        jsonLimit: opts.jsonLimit || '1mb',
-        textLimit: opts.textLimit || '1mb',
-        ...opts
-    });
+export default function(opts = {}) {
+  return koaBodyParser({
+    formLimit: opts.formLimit || '1mb',
+    jsonLimit: opts.jsonLimit || '1mb',
+    textLimit: opts.textLimit || '1mb',
+    ...opts
+  });
 };

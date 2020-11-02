@@ -1,7 +1,7 @@
-module.exports = function (func, ms) {
+export default function(func, ms) {
 	let isThrottled = false, savedArgs, savedThis;
 
-	function wrapper () {
+	function wrapper() {
 		if (isThrottled) {
 			savedArgs = arguments;
 			savedThis = this;

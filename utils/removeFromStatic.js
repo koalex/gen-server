@@ -1,42 +1,44 @@
-const path     = require('path');
-const rimraf   = require('rimraf');
-const notifier = require('node-notifier');
-const dest     = path.join(__dirname, '../static');
+import { basename, join } from 'path';
+import rimraf from 'rimraf';
+import notifier from 'node-notifier';
+import esDirname from './dirname.js';
 
-module.exports = function (paths) {
-    if (Array.isArray(paths)) {
-        paths.forEach(source => {
-            try {
-                rimraf.sync(path.join(dest, path.basename(source)));
-            } catch (err) {
-                if (__DEV__) {
-                    notifier.notify({
-                        title: 'NODE.js: removeFromStatic Error',
-                        message: err.message,
-                        sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
-                        wait: true
-                    });
-                } else {
-                    throw err;
-                }
-            }
-        });
-    } else if ('string' == typeof paths) {
-        try {
-            rimraf.sync(path.join(dest, path.basename(paths)));
-        } catch (err) {
-            if (__DEV__) {
-                notifier.notify({
-                    title: 'NODE.js: removeFromStatic Error',
-                    message: err.message,
-                    sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
-                    wait: true
-                });
-            } else {
-                throw err;
-            }
+const dest = join(esDirname(import.meta), '../static');
+
+export default function(paths) {
+  if (Array.isArray(paths)) {
+    paths.forEach(source => {
+      try {
+        rimraf.sync(join(dest, basename(source)));
+      } catch (err) {
+        if (process.env.NODE_ENV === 'development') {
+          notifier.notify({
+            title: 'NODE.js: removeFromStatic Error',
+            message: err.message,
+            sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
+            wait: true
+          });
+        } else {
+          throw err;
         }
-    } else {
-        throw new Error('"paths" must be a string or array of strings.');
+      }
+    });
+  } else if ('string' === typeof paths) {
+    try {
+      rimraf.sync(join(dest, basename(paths)));
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        notifier.notify({
+          title: 'NODE.js: removeFromStatic Error',
+          message: err.message,
+          sound: ('DARWIN' === os.type().toUpperCase()) ? 'Blow' : true,
+          wait: true
+        });
+      } else {
+        throw err;
+      }
     }
+  } else {
+    throw new Error('"paths" must be a string or array of strings.');
+  }
 };
