@@ -277,7 +277,7 @@ app
     .use(router.routes())
     .use(router.allowedMethods({throw: false}));
 
-if (!module.parent) {
+if (process.env.NODE_ENV !== 'test') {
 	const port = Number(config.port) + (process.env.NODE_APP_INSTANCE ? Number(process.env.NODE_APP_INSTANCE) : 0);
     server.listen(port, () => {
         console.log('SERVER LISTENING ON PORT:', port);
