@@ -54,8 +54,8 @@ process
         unhandledRejections.set(p, err);
         setTimeout(function () {
             if (unhandledRejections.has(p)) {
-                if (!__TEST__) console.error(err);
                 if (__DEV__) {
+                  console.error(err);
                     notifier.notify({
                         title: 'NODE.js: unhandledRejection',
                         message: err.message,
@@ -75,8 +75,8 @@ process
         unhandledRejections.delete(p);
     })
     .on('uncaughtException', err => {
-        if (!__TEST__) console.error(err);
         if (__DEV__) {
+          console.error(err);
             if (err.message.includes('EADDRINUSE')) return process.exit(0);
             notifier.notify({
                 title: 'NODE.js: uncaughtException',
@@ -106,7 +106,7 @@ function onSigintSigterm(signal) {
     // Stops the server from accepting new connections and finishes existing connections.
     server.close(err => {
         if (err) {
-            console.error(err);
+          if (__DEV__) console.error(err);
             logger.fatal(err);
             return process.exit(1);
         }
@@ -178,7 +178,7 @@ app.use(async (ctx, next) => {
             } finally {
                 const nsLogger = ns.get('logger');
                 if (nsLogger && nsLogger.fields.requestId !== requestId) {
-                    console.error('CLS: wrong context', ns.get('logger').fields.requestId, 'should be', requestId);
+                  if (__DEV__) console.error('CLS: wrong context', ns.get('logger').fields.requestId, 'should be', requestId);
                 }
                 resolve();
             }
