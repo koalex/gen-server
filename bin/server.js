@@ -129,7 +129,7 @@ app.keys = new KeyGrip(config.keys, 'sha512');
 	X-Forwarded-Proto
 	X-Forwarded-For -> ip
 */
-app.proxy = process.env.PROXY.toString() === true;
+app.proxy = !!process.env.PROXY;
 
 app.use(responseTime());
 
