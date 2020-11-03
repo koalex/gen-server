@@ -57,6 +57,7 @@ export default {
       return uri;
     }),
     options: {
+      authSource: 'admin',
       replicaSet: process.env.MONGO_REPL_SET_NAME,
       useNewUrlParser: true,
       useFindAndModify: false,
@@ -66,8 +67,6 @@ export default {
       // user: process.env.MONGO_USER,
       // pass: process.env.MONGO_PASS,
       autoIndex: false, // Don't build indexes
-      reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-      reconnectInterval: 500, // Reconnect every 500ms
       keepAlive: 120,
       keepAliveInitialDelay: 300000,
       poolSize: 10,
