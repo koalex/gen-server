@@ -9,7 +9,7 @@ if (['https', 'http2', 'http/2'].some(protocol => config.protocol === protocol))
 }
 const assert        = require('assert');
 const fs			= require('fs');
-const uuid          = require('uuid/v4');
+const uuid          = require('uuid').v4;
 const server        = require(__dirname + '/../bin/server.js');
 const request       = require('supertest')(server);
 const io            = require('socket.io-client');
