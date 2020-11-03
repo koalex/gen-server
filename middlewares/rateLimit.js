@@ -4,7 +4,7 @@ let redis;
 
 // TODO: заменить на https://github.com/ysocorp/koa2-ratelimit и для __TEST__ сделать хранение в memory т.к. koa-ratelimit работает только с Redis
 export default async (ctx, next) => {
-  if (process.env.NODE_ENV === 'test' || (redis && !redis.connected)) {
+  if (process.env.NODE_ENV === 'test' || (redis && redis.status !== 'ready')) {
     await next();
   } else if (!redis) {
     const redisModule = await import('../lib/redis.js');
@@ -12,6 +12,7 @@ export default async (ctx, next) => {
     await next();
   } else {
     return ratelimit({
+      driver: 'redis',
       db: redis,
       duration: 60000, // 1min
       id: ctx => ctx.ip,
