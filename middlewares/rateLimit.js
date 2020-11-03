@@ -8,10 +8,11 @@ if (!global.__TEST__) {
 
 // TODO: заменить на https://github.com/ysocorp/koa2-ratelimit и для __TEST__ сделать хранение в memory т.к. koa-ratelimit работает только с Redis
 module.exports = async (ctx, next) => {
-	if (global.__TEST__ || (redis && !redis.connected)) {
+	if (global.__TEST__ || (redis && redis.status !== 'ready')) {
 		await next();
 	} else {
         return ratelimit({
+          driver: 'redis',
             db: redis,
             duration: 60000, // 1min
             id: ctx => ctx.ip,
