@@ -12,7 +12,7 @@ const log         = require('../lib/logger');
 
 const messagesDir = __dirname + '/data';
 
-if (cluster.isMaster || (!cluster.isMaster && !cluster.isWorker)) createDictionary();
+createDictionary();
 
 function createDictionary () {
     let dictionary         = {};
