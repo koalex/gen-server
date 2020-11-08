@@ -112,6 +112,7 @@
         "npm-check-updates": "^10.0.0",
         "nyc": "^15.1.0",
         "retire": "^2.2.3",
+        "socket.io-client": "^3.0.0",
         "supertest": "^6.0.1"
     }
 }
