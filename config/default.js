@@ -9,26 +9,8 @@ const appName = require('../package').name;
 module.exports = {
     appName,
     ssl: {
-        key: defer(cfg => {
-            try {
-                return fs.readFileSync(process.env.SSL_KEY);
-            } catch (err) {
-                if (cfg.protocol === 'https' || cfg.protocol === 'http2' || cfg.protocol === 'http/2') {
-                    console.error('SSL key not found.');
-                    process.exit(1);
-                }
-            }
-        }),
-        cert: defer(cfg => {
-            try {
-                return fs.readFileSync(process.env.SSL_CERT);
-            } catch (err) {
-                if (cfg.protocol === 'https' || cfg.protocol === 'http2' || cfg.protocol === 'http/2') {
-                    console.error('SSL cert not found.');
-                    process.exit(1);
-                }
-            }
-        })
+      key: null,
+      cert: null,
     },
     protocol: process.env.PROTOCOL || 'https',
     port: isNaN(Number(process.env.PORT)) ? 3000 : Number(process.env.PORT),
@@ -79,12 +61,6 @@ module.exports = {
 
     nodemailer: {
         service: process.env.MAILER_SERVICE || 'gmail',
-        host: process.env.MAILER_HOST || 'smtp-relay.gmail.com',
-        port: isNaN(Number(process.env.MAILER_PORT)) ? 25 : Number(process.env.MAILER_PORT),
-        secure: defer(cfg => {
-            // true for 465, false for other ports on gmail
-            return (Number(cfg.nodemailer.port) === 465 || Number(process.env.MAILER_PORT) === 465)
-        }),
         auth: {
             user: process.env.MAILER_USER,
             pass: process.env.MAILER_PASS
@@ -97,3 +73,34 @@ module.exports = {
         }
     }
 };
+let key, cert;
+if (process.env.SSL_KEY) {
+  try {
+    key = fs.readFileSync(process.env.SSL_KEY);
+  } catch (err) {
+    console.error('SSL key not found.');
+    console.error(err);
+    process.exit(1);
+  }
+
+  try {
+    cert = fs.readFileSync(process.env.SSL_CERT);
+  } catch (err) {
+    console.error('SSL cert not found.');
+    console.error(err);
+    process.exit(1);
+  }
+}
+
+if (key && cert) {
+  if (process.env.MAILER_DKIM === 'true') {
+    module.exports.nodemailer.dkim = {
+      domainName: process.env.HOST,
+      keySelector: 'default',
+      privateKey: key
+    };
+  }
+
+  module.exports.ssl.cert = cert;
+  module.exports.ssl.key = key;
+}
