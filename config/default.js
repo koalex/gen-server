@@ -61,10 +61,7 @@ module.exports = {
 
     nodemailer: {
         service: process.env.MAILER_SERVICE || 'gmail',
-        auth: {
-            user: process.env.MAILER_USER,
-            pass: process.env.MAILER_PASS
-        }
+        transporters: {}
     },
     crypto: {
         hash: {
@@ -92,15 +89,29 @@ if (process.env.SSL_KEY) {
   }
 }
 
-if (key && cert) {
-  if (process.env.MAILER_DKIM === 'true') {
-    module.exports.nodemailer.dkim = {
+
+const emails = process.env.MAILER_USER.split(',').map(email => email.trim());
+const emailsPass = process.env.MAILER_PASS.split(',').map(pass => pass.trim());
+
+for (let i = 0; i < emails.length; i += 1) {
+  const transporter = emails[i].match(/^([^@]*)@/)[1]; // info,no-reply...
+  module.exports.nodemailer.transporters[transporter] = {
+    service: process.env.MAILER_SERVICE || 'gmail',
+    auth: {
+      user: emails[i],
+      pass: emailsPass[i],
+    },
+  }
+  if (key && cert && process.env.MAILER_DKIM === 'true') {
+    module.exports.nodemailer.transporters[transporter].dkim = {
       domainName: process.env.HOST,
       keySelector: 'default',
       privateKey: key
     };
   }
+}
 
+if (key && cert) {
   module.exports.ssl.cert = cert;
   module.exports.ssl.key = key;
 }
