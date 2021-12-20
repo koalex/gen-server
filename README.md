@@ -90,7 +90,7 @@ npm run lint-staged
 
 Запуск тестов:
 ```bash
-npm run test
+npm test
 ```
 
 Создание коммит на основе `Conventional Commits`:
