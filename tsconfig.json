@@ -1,0 +1,42 @@
+{
+  "ts-node": {
+    "files": true,
+    "require": ["tsconfig-paths/register"],
+    "compilerOptions": {
+      // compilerOptions specified here will override those declared below,
+      // but *only* in ts-node.  Useful if you want ts-node and tsc to use
+      // different options with a single tsconfig.json.
+    }
+  },
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "commonjs",
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": false,
+    "baseUrl": "src",
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "lib": [
+      "ESNext",
+      "dom"
+    ],
+    "declaration": true,
+    "declarationDir": "./dist",
+    "declarationMap": true,
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
+}

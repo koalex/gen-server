@@ -1,0 +1,1 @@
+{"version":3,"file":"outdatedBrowser.d.ts","sourceRoot":"","sources":["../../src/middlewares/outdatedBrowser.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,WAAW,CAAC;AA2DvC,aAAK,YAAY,GAAG;IAClB,EAAE,CAAC,EAAE,MAAM,CAAC;CACb,CAAC;AAEF,MAAM,CAAC,OAAO,UAAU,eAAe,CAAC,IAAI,GAAE,YAAiB,SAEtD,UAAU,QACT,MAAM,QAAQ,GAAG,CAAC,mBAmD3B"}

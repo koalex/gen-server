@@ -2,35 +2,17 @@
 
 # Project files #
 #################
-package-lock.json
 .idea/
 .vscode/
-ssl/*
-!ssl/.gitkeep
 node_modules
-bower_components
 .nyc_output
-data/*
-!data/.gitkeep
 coverage/*
 !coverage/.gitkeep
 dump.rdb
-i18n/data/*
-!i18n/data/.gitkeep
 temp/*
 !temp/.gitkeep
+!temp/i18n/.gitkeep
 ncp-debug.log
-static/*
-!static/loveyalikeasister.woff2
-!static/robots.txt
-!static/error.pug
-!static/403.svg
-!static/404.svg
-!static/500.svg
-!static/outdatedBrowser.pug
-!static/outdatedbrowsers_edge.png
-!static/outdatedbrowsers_ie.png
-!static/outdatedbrowsers_systems.png
 
 
 # Runtime data #
@@ -98,6 +80,11 @@ Thumbs.db
 # TypeScript v1 declaration files #
 ###################################
 typings/
+
+
+# TypeScript cache
+###################################
+*.tsbuildinfo
 
 
 # Optional eslint cache #

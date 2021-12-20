@@ -1,0 +1,43 @@
+html(lang=''+i18n.locale)
+    head
+        meta(charset="utf-8")
+        //- if favicons
+            each val, index in favicons.html
+                !=val
+
+        title #{status} | #{message}
+        style
+            | html { overflow: auto; font-family: 'Love Ya Like A Sister', Arial, 'sans-serif'; }
+            | body { margin: 0; padding: 1px; background-color: #eaeaea; box-shadow: inset 0 0 100px rgba(0,0,0,.5); }
+            | p { margin: 40px 0 0 0; color: #9eb92e; font-size: 200px; text-align: center; text-shadow: 5px 5px 10px rgba(0,0,0,.5); }
+            | h1 { margin-top: 40px; color: #272727; font-size: 36px; text-align: center; }
+            | p > span:nth-child(1) { position: relative; left: 15px; z-index: 3; }
+            | p > span:nth-child(2) { position: relative; color: #2b2b2b; z-index: 2; }
+            | p > span:nth-child(3) { position: relative; left: -15px; z-index: 1; }
+            | a { display: inline-block; margin: 0 auto; padding: 7px 12px; font-size: 20px; color: #fff; background-color: #2b2b2b; text-decoration: none; cursor: pointer; border-radius: 4px; }
+            | a:hover { text-shadow: 0 0 10px rgba(255,255,255,.9); }
+        style.
+            @font-face {
+                font-family: 'Love Ya Like A Sister';
+                font-style: normal;
+                font-weight: 400;
+                src: local('Love Ya Like A Sister Regular'), local('LoveYaLikeASister-Regular'), url('/loveyalikeasister.woff2') format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+
+    body
+        h1(style="position: relative; z-index: 1") #{message}
+        - var _status = String(status).length == 3 ? String(status).split('') : status
+        if Array.isArray(_status)
+            p
+                each val in _status
+                    span(style="position: relative; z-index: 1")= val
+        else
+            p #{status}
+
+        if status == 404 || status == 403 || status == 500
+           - var img = status == 404 ? '/404.svg' : status == 403 ? '/403.svg' : '/500.svg'
+           img(src='' + img, alt=''+ message, style="position: fixed; bottom: 0")
+
+        div(style="text-align: center; position: relative; z-index: 1")
+            a(href="/") #{i18n.__('GO_2_HOME_PAGE')} &rarr;

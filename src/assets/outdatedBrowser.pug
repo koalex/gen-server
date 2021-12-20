@@ -1,0 +1,329 @@
+doctype html
+if userAgent.isIE
+    <!--[if lte IE 9]>
+    html.lte-ie9(lang=''+i18n.locale)
+    <![endif]-->
+    <!--[if lte IE 10]>
+    html.lte-ie10(lang=''+i18n.locale)
+    <![endif]-->
+    <!--[if !(IE)]><!-->
+html(lang=''+i18n.locale)
+    if userAgent.isIE
+        <!--<![endif]-->
+    head
+        meta(charset='utf-8')
+        title #{pageTitle}
+
+        //-if favicons
+            each val, index in favicons.html
+                !=val
+        meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+        //- TODO: https://tech.yandex.ru/browser/tableau/doc/dg/concepts/create-widget-docpage/
+
+        if alternates
+            each val in alternates
+                !=val
+
+        if userAgent.source.match(/IEMobile\/10\.0/)
+            style
+                | @-ms-viewport{width:auto!important}
+            script.
+                if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                    var msViewportStyle = document.createElement('style')
+                    msViewportStyle.appendChild(document.createTextNode('@-ms-viewport{width:auto!important}'));
+                    document.querySelector('head').appendChild(msViewportStyle)
+                }
+        if userAgent.isMobile
+            <!--[if IEMobile]>
+            meta(http-equiv='cleartype' content='on')
+            <![endif]-->
+            meta(name='HandheldFriendly' content='True')
+
+        style
+            | * { outline: none; }
+            | html, body {height: 100%; margin: 0;}
+            | body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Oxygen-Sans, "Fira Sans", "Droid Sans", Ubuntu, Cantarell, "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+            | table {
+            |        border-collapse: collapse;
+            |        border-spacing: 0;
+            | }
+            | p, ul { margin: 0; }
+            | ul, td, th { padding: 0; }
+            | ul, li { list-style: none; }
+            | .outdatedbrowser.table { width: 100%; height: 100%; }
+            | .outdatedbrowser.table td {
+            |   width: 33.333333%;
+            |   text-align: center;
+            |   color: #fff;
+            |   vertical-align: bottom;
+            |   box-shadow: none;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .outdatedbrowser .outdatedbrowser__header {
+            |   width: auto;
+            |   height: 30px;
+            |   font-weight: bold;
+            |   text-transform: uppercase;
+            |   vertical-align: middle !important;
+            |   background-color: #000;
+            |   box-shadow: none !important;
+            | }
+            | h1 { font-size: 13px; }
+            | .outdatedbrowser.table td .browser-img {
+            |   display: inline-block;
+            |   width: 100px;
+            |   height: 100px;
+            |   background-image: url('/outdatedbrowsers_edge.png');
+            |   background-position-x: -999999px;
+            |   background-position-y: 0;
+            |   background-repeat-x: no-repeat;
+            |   background-repeat-y: no-repeat;
+            |   background-size: auto 200px;
+            | }
+            | .outdatedbrowser.table.ltew8 td .browser-img {
+            |   background-image: url('/outdatedbrowsers_ie.png');
+            | }
+            | .outdatedbrowser .browser-name {
+            |   font-weight: bold;
+            |   font-size: 13px;
+            | }
+            | .outdatedbrowser.table td .under {
+            |   position: relative;
+            |   font-weight: bold;
+            |   height: 50px;
+            | }
+            | .outdatedbrowser.table td .under p {
+            |   text-transform: uppercase;
+            |   font-size: 10px;
+            |   line-height: 20px;
+            | }
+            | .outdatedbrowser.table td .under-overlay {
+            |   position: absolute;
+            |   top: 0;
+            |   left: 0;
+            |   width: 100%;
+            |   height: 100%;
+            |   background-color: #fff;
+            |   opacity: 0.2;
+            | }
+            | .outdatedbrowser .download {
+            |   display: inline-block;
+            |   margin-top: 20px;
+            |   margin-bottom: 15%;
+            |   width: 125px;
+            |   height: 50px;
+            |   line-height: 50px;
+            |   cursor: pointer;
+            |   color: #fff;
+            |   text-transform: uppercase;
+            |   font-size: 14px;
+            |   font-weight: bold;
+            |   text-decoration: none;
+            |   border: 3px solid #fff;
+            |   border-radius: 30px;
+            | }
+            | .outdatedbrowser .download:hover {
+            |   background-color: #fff;
+            | }
+            | .outdatedbrowser td.chrome {
+            |   background: #f2b635;
+            | }
+            | .outdatedbrowser td.chrome:hover {
+            |   box-shadow: inset 0 0 200px #c0870c;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .outdatedbrowser.table td.chrome .download:hover {
+            |   color: #f2b635;
+            | }
+            | .outdatedbrowser.table td.chrome .browser-img {
+            |   background-position-x: 0;
+            | }
+            | .outdatedbrowser td.firefox {
+            |   background: #f19a2a;
+            | }
+            | .outdatedbrowser td.firefox:hover {
+            |   box-shadow: inset 0 0 200px #bf710d;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .outdatedbrowser.table td.firefox .download:hover {
+            |   color: #f19a2a;
+            | }
+            | .outdatedbrowser.table td.firefox .browser-img {
+            |   background-position-x: -100px;
+            | }
+            | .outdatedbrowser.table td.edge {
+            |   background: #00caff;
+            | }
+            | .outdatedbrowser.table td.edge:hover {
+            |   box-shadow: inset 0 0 200px #008db3;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .outdatedbrowser.table td.edge .download:hover {
+            |   color: #00caff;
+            | }
+            | .outdatedbrowser.table td.edge .browser-img {
+            |   background-position-x: -200px;
+            | }
+            | .outdatedbrowser.table td.safari {
+            |   background: #00a0e6;
+            | }
+            | .outdatedbrowser.table td.safari:hover {
+            |   box-shadow: inset 0 0 200px #007cb3;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .outdatedbrowser.table td.safari .download:hover {
+            |   color: #00a0e6;
+            | }
+            | .outdatedbrowser.table td.safari .browser-img {
+            |   background-position-x: -300px;
+            | }
+            | .outdatedbrowser.table td.yandex {
+            |   background: #ff4b3b;
+            | }
+            | .outdatedbrowser.table td.yandex:hover {
+            |   box-shadow: inset 0 0 200px #b30f00;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .table td.yandex .download:hover {
+            |   color: #ff4b3b;
+            | }
+            | .outdatedbrowser.table td.yandex .browser-img {
+            |   background-position-x: -500px;
+            | }
+            | .table td.opera {
+            |   background: #e76054;
+            | }
+            | .table td.opera:hover {
+            |   box-shadow: inset 0 0 200px #9c2116;
+            |   transition: box-shadow 0.3s linear 0s;
+            | }
+            | .table td.opera .download:hover {
+            |   color: #e76054;
+            | }
+            | .table td.opera .browser-img {
+            |   background-position-x: -400px;
+            | }
+            | .systems-list {
+            |   position: absolute;
+            |   bottom: 0;
+            |   left: 0;
+            |   width: 100%;
+            | }
+            | .systems-list-item {
+            |   display: inline-block;
+            |   margin-right: 5px;
+            | }
+            | .systems-list-item > i {
+            |   display: inline-block;
+            |   width: 25px;
+            |   height: 25px;
+            |   background-image: url("/outdatedbrowsers_systems.png");
+            |   background-position-x: -999999px;
+            |   background-position-y: 0;
+            |   background-repeat-x: no-repeat;
+            |   background-repeat-y: no-repeat;
+            |   background-size: auto 25px;
+            | }
+            | .systems-list-item > i.windows {
+            |   background-position-x: 0;
+            | }
+            | .systems-list-item > i.apple {
+            |   background-position-x: -25px;
+            | }
+            | .systems-list-item > i.linux {
+            |   background-position-x: -50px;
+            | }
+            | .table td:hover .browser-img {
+            |   background-position-y: -100px;
+            | }
+            | .table td.safari:hover .browser-img {
+            |   background-position-y: -99px;
+            | }
+
+    body
+        - var oldWin = (userAgent.isWindows && (userAgent.os.toUpperCase() == 'WINDOWS XP' || userAgent.os.toUpperCase() == 'WINDOWS 7' || userAgent.os.toUpperCase() == 'WINDOWS 8.1' || userAgent.os.toUpperCase() == 'WINDOWS 8'))
+
+        table.outdatedbrowser.table(class=oldWin ? 'ltew8' : '')
+            tr
+                td.outdatedbrowser__header(colspan="3")
+                    h1 #{i18n.__('outdatedbrowser.HEADER')}
+            tr
+                td.chrome
+                    i.browser-img
+                    h2.browser-name GOOGLE CHROME
+                    a.download(href="https://www.google.com/chrome/browser/desktop" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.windows(title="WINDOWS")
+                            li.systems-list-item
+                                i.apple(title="MAC OS")
+                            li.systems-list-item
+                                i.linux(title="LINUX")
+
+                td.firefox
+                    i.browser-img
+                    h2.browser-name MOZILLA FIREFOX
+                    a.download(href="http://www.mozilla.org/firefox/new" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.windows(title="WINDOWS")
+                            li.systems-list-item
+                                i.apple(title="MAC OS")
+                            li.systems-list-item
+                                i.linux(title="LINUX")
+                td.edge
+                    i.browser-img
+                    h2.browser-name #{oldWin ? 'INTERNET EXPLORER' : 'MICROSOFT EDGE'}
+                    a.download(href="https://support.microsoft.com/help/4027741/windows-get-microsoft-edge" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.windows(title=oldWin ? 'WINDOWS 7 и WINDOWS 8' : 'WINDOWS >= 10')
+            tr
+                td.safari
+                    i.browser-img
+                    h2.browser-name APPLE SAFARI
+                    a.download(href="https://support.apple.com/downloads/safari" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.apple(title="MAC OS")
+
+                td.yandex
+                    i.browser-img
+                    h2.browser-name YANDEX BROWSER
+                    a.download(href="https://browser.yandex.ru/desktop/main" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.windows(title="WINDOWS")
+                            li.systems-list-item
+                                i.apple(title="MAC OS")
+                            li.systems-list-item
+                                i.linux(title="LINUX")
+                td.opera
+                    i.browser-img
+                    h2.browser-name OPERA
+                    a.download(href="http://www.opera.com" target="_blank") #{i18n.__('outdatedbrowser.DOWNLOAD')}
+                    .under
+                        p #{i18n.__('outdatedbrowser.AVAILABLE')}
+                        .under-overlay
+                        ul.systems-list
+                            li.systems-list-item
+                                i.windows(title="WINDOWS")
+                            li.systems-list-item
+                                i.apple(title="MAC OS")
+                            li.systems-list-item
+                                i.linux(title="LINUX")
