@@ -1,0 +1,30 @@
+{
+  "hooks": {
+    "before:init": [
+      "npm test"
+    ]
+  },
+  "npm": {
+    "publish": false
+  },
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "chore: release v${version}",
+    "tagAnnotation": "Release ${version}",
+    "tagName": "v${version}",
+    "commitArgs": "-S"
+  },
+  "github": {
+    "release": true,
+    "tokenRef": "GITHUB_TOKEN"
+  },
+  "gitlab": {
+    "release": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  }
+}
