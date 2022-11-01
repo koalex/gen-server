@@ -20,8 +20,8 @@ const ignore = [
   'nodemon.ts',
 ];
 (0, nodemon_1.default)({
-  delay: 500,
   script: (0, path_1.join)(__dirname, 'index.ts'),
+  delay: 500,
   watch,
   ignore,
   ext: 'ts,json',

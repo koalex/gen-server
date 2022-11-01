@@ -50,7 +50,7 @@ const node_notifier_1 = __importDefault(require('node-notifier'));
 const logger_1 = __importDefault(require('../lib/logger'));
 const __DEV__ = process.env.NODE_ENV === 'development';
 const defaultLocale = process.env['DEFAULT_LOCALE'] || 'en';
-const genServerRoot = path_1.default.join(__dirname, '../../');
+const genServerRoot = path_1.default.join(__dirname, '../../'); // FIXME:
 const messagesDir = path_1.default.join(genServerRoot, 'temp/i18n');
 const dictionary = {};
 createDictionary();

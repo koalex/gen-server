@@ -45,6 +45,7 @@ function Cors(origins = []) {
   return (ctx, next) =>
     __awaiter(this, void 0, void 0, function* () {
       let origin;
+      const corsProps = {};
       if (
         !__PROD__ &&
         ctx.headers &&
@@ -55,11 +56,29 @@ function Cors(origins = []) {
       } else if (Origins.has(ctx.origin)) {
         origin = ctx.origin;
       }
+      if (Origins.has('*')) {
+        origin = '*';
+        corsProps.exposeHeaders = ['*'];
+        corsProps.maxAge = 600 * 10 * 10; // 1000min
+        corsProps.credentials = false;
+        corsProps.allowMethods = [
+          'GET',
+          'PUT',
+          'POST',
+          'PATCH',
+          'DELETE',
+          'HEAD',
+          'OPTIONS',
+        ];
+        corsProps.allowHeader = ['*'];
+        corsProps.allowHeaders = ['*'];
+      }
       // TODO: настроить CORS https://www.npmjs.com/package/koa2-cors
       if (origin) {
-        return (0, koa2_cors_1.default)({
-          origin,
-        })(ctx, next);
+        return (0, koa2_cors_1.default)(Object.assign({ origin }, corsProps))(
+          ctx,
+          next,
+        );
       }
       return (0, koa2_cors_1.default)()(ctx, next);
     });
