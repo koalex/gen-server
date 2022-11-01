@@ -8,7 +8,7 @@ export default function Cors(origins: string[] = []): Middleware {
 
   return async (ctx: Context, next: () => Promise<any>) => {
     let origin;
-
+    const corsProps: any = {};
     if (
       !__PROD__ &&
       ctx.headers &&
@@ -20,10 +20,29 @@ export default function Cors(origins: string[] = []): Middleware {
       origin = ctx.origin;
     }
 
+    if (Origins.has('*')) {
+      origin = '*';
+      corsProps.exposeHeaders = ['*'];
+      corsProps.maxAge = 600 * 10 * 10; // 1000min
+      corsProps.credentials = false;
+      corsProps.allowMethods = [
+        'GET',
+        'PUT',
+        'POST',
+        'PATCH',
+        'DELETE',
+        'HEAD',
+        'OPTIONS',
+      ];
+      corsProps.allowHeader = ['*'];
+      corsProps.allowHeaders = ['*'];
+    }
+
     // TODO: настроить CORS https://www.npmjs.com/package/koa2-cors
     if (origin) {
       return cors({
         origin,
+        ...corsProps,
       })(ctx, next);
     }
     return cors()(ctx, next);
